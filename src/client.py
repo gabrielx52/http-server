@@ -6,7 +6,7 @@ import sys
 
 def client(message):
     """Connect with server and send message."""
-    port = 5043
+    port = 5045
     if len(message) % 8 == 0:
         message += ' '
     client = socket.socket(*socket.getaddrinfo('127.0.0.1', port)[1][:3])
