@@ -20,8 +20,9 @@ def client(message):
         incoming_message += part.decode('utf8')
         if len(part) < buffer_length:
             break
-    print(incoming_message.strip())
     client.close()
+    print(incoming_message.strip())
+    return(incoming_message.strip())
 
 
 if __name__ == "__main__":
