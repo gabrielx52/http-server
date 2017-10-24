@@ -6,7 +6,9 @@ import sys
 
 def client(message):
     """Connect with server and send message."""
-    port = 5035
+    port = 5042
+    if len(message) % 8 == 0:
+        message += ' '
     client = socket.socket(*socket.getaddrinfo('127.0.0.1', port)[1][:3])
     client.connect(('127.0.0.1', port))
     client.sendall(message.encode('utf8'))
@@ -18,10 +20,9 @@ def client(message):
         incoming_message += part.decode('utf8')
         if len(part) < buffer_length:
             break
-    print(incoming_message)
+    print(incoming_message.strip())
     client.close()
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     client(sys.argv[1])
-

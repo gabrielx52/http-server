@@ -1,12 +1,11 @@
 """Server package for echo server."""
 
 import socket
-import sys
 
 
 def server():
     """Start a server and echo all responses."""
-    port = 5035
+    port = 5042
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
@@ -26,8 +25,6 @@ def server():
                     conn.close()
                     break
     except KeyboardInterrupt:
-        if conn:
-            conn.close()
         server.close()
         print("\nGoodbye")
 
