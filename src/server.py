@@ -6,7 +6,7 @@ import sys
 
 def server():
     """Start a server and echo all responses."""
-    port = 5033
+    port = 5035
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
@@ -26,6 +26,11 @@ def server():
                     conn.close()
                     break
     except KeyboardInterrupt:
+        if conn:
+            conn.close()
         server.close()
         print("\nGoodbye")
-        sys.exit()
+
+
+if __name__ == "__main__":
+    server()

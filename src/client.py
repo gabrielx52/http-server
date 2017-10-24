@@ -1,11 +1,12 @@
 """Client package for echo server."""
 
 import socket
+import sys
 
 
 def client(message):
     """Connect with server and send message."""
-    port = 5033
+    port = 5035
     client = socket.socket(*socket.getaddrinfo('127.0.0.1', port)[1][:3])
     client.connect(('127.0.0.1', port))
     client.sendall(message.encode('utf8'))
@@ -21,7 +22,6 @@ def client(message):
     client.close()
 
 
+if __name__ == "__main__": 
+    client(sys.argv[1])
 
-
-
- if __name__ == "__main__": 
