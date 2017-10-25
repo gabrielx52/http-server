@@ -22,8 +22,8 @@ def client(message):
             break
     client.shutdown(socket.SHUT_WR)
     client.close()
-    print(incoming_message.decode('utf8'))
+    return incoming_message.decode('utf8')
 
 
 if __name__ == "__main__":
-    client(sys.argv[1])
+    print(client(sys.argv[1]))
