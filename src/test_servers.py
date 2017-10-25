@@ -49,3 +49,17 @@ def test_response_error():
     """Test that we get an 500 error message."""
     from server import response_error
     assert response_error().endswith('\r\n\r\n')
+
+
+def test_client_message_response_ok_end():
+    """Testing client response message."""
+    from client import client
+    reply = client('test string')
+    assert reply.endswith('GMT\r\n\r\n')
+
+
+def test_client_message_response_ok_start():
+    """Testing client response message start."""
+    from client import client
+    reply = client('test string')
+    assert reply.startswith('HTTP/1.1 200 OK')
