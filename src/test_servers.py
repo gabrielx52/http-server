@@ -43,3 +43,9 @@ def test_response_ok():
     """Test for server response_ok function."""
     from server import response_ok
     assert response_ok().endswith('\r\n\r\n')
+
+
+def test_response_error():
+    """Test that we get an 500 error message."""
+    from server import response_error
+    assert response_error().endswith('\r\n\r\n')
