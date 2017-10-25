@@ -22,7 +22,7 @@ def server():
             while not message_complete:
                 part = conn.recv(buffer_length)
                 incoming_message += part
-                if len(part) < buffer_length:
+                if b'@#FULL_STOP#@' in incoming_message:
                     message_complete = True
             response = response_ok().encode('utf8')
             conn.sendall(response)
