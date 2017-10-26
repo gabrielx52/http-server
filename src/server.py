@@ -50,5 +50,24 @@ def response_error():
            + date_time + "\r\n\r\n"
 
 
+def parse_request(request):
+    """Parse the client request to confirm validity."""
+    if request.endswith('\r\n\r\n'):
+        head, host, *_ = request.split("\r\n")
+        method, uri, protocol = head.split(' ')
+        host_url = host[6:]
+        if method != ("GET"):
+            raise TypeError("Your method request must be that of GET.")
+        if not host_url.startswith("www.") and not host.startswith("Host:"):
+            raise ValueError("Your requested url is not properly formatted or\
+                            could not be found.")
+        if protocol != ("HTTP/1.1"):
+            raise ValueError("Your request is not of the proper version.")
+        else:
+            return uri
+    else:
+        raise ValueError("Your requested url is not properly formatted")
+
+
 if __name__ == "__main__":
     server()
