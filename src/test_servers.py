@@ -48,7 +48,8 @@ def test_response_ok():
 def test_response_error():
     """Test that we get an 500 error message."""
     from server import response_error
-    assert response_error().endswith('\r\n\r\n')
+    resp = response_error("500", 'Internal Server Error')
+    assert resp.startswith("HTTP/1.1 500")
 
 
 def test_client_message_response_ok_end():
@@ -63,3 +64,10 @@ def test_client_message_response_ok_start():
     from client import client
     reply = client('test string')
     assert reply.startswith('HTTP/1.1 200 OK')
+
+
+def test_uri_response_from_parse_request():
+    """Check if URI is returned from parse request function."""
+    from server import parse_request
+    req = "GET /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
+    assert parse_request(req) == "/index.html"

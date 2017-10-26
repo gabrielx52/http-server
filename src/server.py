@@ -43,11 +43,11 @@ def response_ok():
            + "\r\n\r\n"
 
 
-def response_error():
+def response_error(code, phrase):
     """Response for 500 Internal Server Error."""
     date_time = email.utils.formatdate(usegmt=True)
-    return "HTTP/1.1 500 Internal Server Error\r\n" + "Date: "\
-           + date_time + "\r\n\r\n"
+    return ("HTTP/1.1 {} {}\r\nDate: " +
+            date_time + "\r\n\r\n").format(code, phrase)
 
 
 def parse_request(request):
@@ -62,7 +62,7 @@ def parse_request(request):
             raise ValueError("Your requested url is not properly formatted or\
                             could not be found.")
         if protocol != ("HTTP/1.1"):
-            raise ValueError("Your request is not of the proper version.")
+            raise ValueError("Your request is not of the proper protocol.")
         else:
             return uri
     else:
