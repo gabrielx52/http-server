@@ -3,6 +3,8 @@
 import sys
 import socket
 import email.utils
+import pathlib
+import mimetypes
 
 
 def server():  # pragma: no cover
@@ -48,6 +50,29 @@ def response_error(code, phrase):
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 {} {}\r\nDate: " +
             date_time + "\r\n\r\n").format(code, phrase).encode('utf8')
+
+
+def resolve_uri(uri):
+    """Respose body composer with URI details and type."""
+    root_path = pathlib.Path('./webroot')
+    resource_path = root_path / uri.lstrip('/')
+    if resource_path.is_dir():
+        li_temp = '\t<li>{}</li>'
+        listing = []
+        for item_path in resource_path.iterdir():
+            listing.append(li_temp.format(str(item_path)))
+        joined_listing = "\r\n".join(listing)
+        content = "<ul>\r\n{}\r\n</ul>".format(joined_listing)
+        cont_type = "directory"
+        return content, cont_type
+    elif resource_path.is_file():
+        content = ''
+        with resource_path.open() as file:
+            content = file.read()
+        cont_type = mimetypes.guess_type(str(resource_path))[0]
+        return content, cont_type
+    else:
+        response_error("400", "Bad request.")
 
 
 def parse_request(request):
