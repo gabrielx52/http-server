@@ -113,17 +113,3 @@ def test_parse_request_400_error_bad_parse_request():
     from server import parse_request
     req = b"GET /index.html HTTP/1.1\r\nHist: www.example.com\r\n\r\n"
     assert parse_request(req).startswith(b'HTTP/1.1 400')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
