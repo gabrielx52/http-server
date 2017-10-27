@@ -9,7 +9,7 @@ import mimetypes
 
 def server():  # pragma: no cover
     """Start a server and echo all responses."""
-    port = 5071
+    port = 5087
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
@@ -43,15 +43,15 @@ def response_ok(content, cont_type):
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 200 OK\r\n" + "Date: " + date_time +
             "\r\nContent-Length: {}\r\nContent-Type: \
-            {}\r\n\r\n{}").format(str(len(content.encode('utf8'))), cont_type,
-                                  content).encode('utf8')
+{}\r\n\r\n{}@FULL_STOP@").format(str(len(content.encode('utf8'))),
+                                 cont_type, content).encode('utf8')
 
 
 def response_error(code, phrase):
     """Response for 500 Internal Server Error."""
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 {} {}\r\nDate: " +
-            date_time + "\r\n\r\n").format(code, phrase).encode('utf8')
+            date_time + "\r\n\r\n@FULL_STOP@").format(code, phrase).encode('utf8')
 
 
 def resolve_uri(uri):
@@ -73,8 +73,6 @@ def resolve_uri(uri):
             content = file.read()
         cont_type = mimetypes.guess_type(str(resource_path))[0]
         return content, cont_type
-    else:
-        response_error("400", "Bad request.")
 
 
 def parse_request(request):
@@ -94,7 +92,11 @@ def parse_request(request):
             if protocol != (b"HTTP/1.1"):
                 return response_error("505", "HTTP version not supported.")
             else:
-                return response_ok(resolve_uri(uri.decode('utf8')))
+                try:
+                    cont, cont_type = resolve_uri(uri.decode('utf8'))
+                    return response_ok(cont, cont_type)
+                except ValueError:
+                    response_error("400", "Bad request.")
         except TypeError:
             return response_error("400", "Bad request.")
     else:
