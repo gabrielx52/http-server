@@ -43,7 +43,7 @@ def response_ok(content, cont_type):
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 200 OK\r\n" + "Date: " + date_time +
             "\r\nContent-Length: {}\r\nContent-Type: \
-            {}\r\n\r\n{}").format(len(content), cont_type,
+            {}\r\n\r\n{}").format(str(len(content.encode('utf8'))), cont_type,
                                   content).encode('utf8')
 
 
