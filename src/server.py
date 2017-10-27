@@ -20,10 +20,10 @@ def server():
             while not message_complete:
                 part = conn.recv(buffer_length)
                 incoming_message += part.decode('utf8')
-                if len(part) < buffer_length:
+                if '#@FULLSTOP@#' in incoming_message:
                     conn.sendall(incoming_message.encode('utf8'))
                     conn.close()
-                    break
+                    message_complete = True
     except KeyboardInterrupt:
         server.close()
         print("\nGoodbye")
