@@ -38,11 +38,13 @@ def server():  # pragma: no cover
         print("\nGoodbye")
 
 
-def response_ok(uri):
+def response_ok(content, cont_type):
     """Set up socket and connection."""
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 200 OK\r\n" + "Date: " + date_time +
-            "\r\nResponse URI: {}\r\n\r\n").format(uri).encode('utf8')
+            "\r\nContent-Length: {}\r\nContent-Type: \
+            {}\r\n\r\n{}").format(len(content), cont_type,
+                                  content).encode('utf8')
 
 
 def response_error(code, phrase):
@@ -92,7 +94,7 @@ def parse_request(request):
             if protocol != (b"HTTP/1.1"):
                 return response_error("505", "HTTP version not supported.")
             else:
-                return response_ok(uri.decode('utf8'))
+                return response_ok(resolve_uri(uri.decode('utf8')))
         except TypeError:
             return response_error("400", "Bad request.")
     else:
