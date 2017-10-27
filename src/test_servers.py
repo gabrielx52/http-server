@@ -42,7 +42,7 @@
 def test_response_ok():
     """Test for server response_ok function."""
     from server import response_ok
-    assert response_ok("uri").endswith(b'\r\n\r\n')
+    assert response_ok("body", "type").endswith(b'@FULL_STOP@')
 
 
 def test_response_error():
@@ -66,11 +66,11 @@ def test_client_message_response_ok_start():
     assert reply.startswith('HTTP/1.1 400')
 
 
-def test_parse_request_response_ok():
-    """Check if URI is returned from parse request function."""
-    from server import parse_request
-    req = b"GET /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
-    assert parse_request(req).startswith(b'HTTP/1.1 200 OK')
+# def test_parse_request_response_ok():
+#     """Check if URI is returned from parse request function."""
+#     from server import parse_request
+#     req = b"GET /images HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
+#     assert parse_request(req).startswith(b'HTTP/1.1 200 OK')
 
 
 def test_parse_request_405_error():
@@ -113,3 +113,5 @@ def test_parse_request_400_error_bad_parse_request():
     from server import parse_request
     req = b"GET /index.html HTTP/1.1\r\nHist: www.example.com\r\n\r\n"
     assert parse_request(req).startswith(b'HTTP/1.1 400')
+
+
