@@ -3,13 +3,14 @@
 import sys
 import socket
 import email.utils
-import pathlib
 import mimetypes
+import os
+import codecs
 
 
 def server():  # pragma: no cover
     """Start a server and echo all responses."""
-    port = 5087
+    port = 5061
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
@@ -47,29 +48,31 @@ def response_ok(content, cont_type):
                                  cont_type, content).encode('utf8')
 
 
-def response_error(code, phrase):
+def response_error(code="400", phrase="Bad request."):
     """Response for 500 Internal Server Error."""
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 {} {}\r\nDate: " +
-            date_time + "\r\n\r\n@FULL_STOP@").format(code, phrase).encode('utf8')
+            date_time + "\r\n\r\n@FULL_STOP@").format(code,
+                                                      phrase).encode('utf8')
 
 
 def resolve_uri(uri):
     """Respose body composer with URI details and type."""
-    root_path = pathlib.Path('./webroot')
-    resource_path = root_path / uri.lstrip('/')
-    if resource_path.is_dir():
+    cwd = os.path.abspath(__file__).rstrip('/server.py')
+    resource_path = cwd + '/webroot/' + uri
+    if os.path.isdir(resource_path):
         li_temp = '\t<li>{}</li>'
         listing = []
-        for item_path in resource_path.iterdir():
+        for item_path in os.listdir(resource_path):
             listing.append(li_temp.format(str(item_path)))
         joined_listing = "\r\n".join(listing)
         content = "<ul>\r\n{}\r\n</ul>".format(joined_listing)
         cont_type = "directory"
         return content, cont_type
-    elif resource_path.is_file():
+    elif os.path.isfile(resource_path):
         content = ''
-        with resource_path.open() as file:
+        with codecs.open(resource_path, encoding='utf8',
+                         errors='ignore') as file:
             content = file.read()
         cont_type = mimetypes.guess_type(str(resource_path))[0]
         return content, cont_type
@@ -86,9 +89,9 @@ def parse_request(request):
             if method != (b"GET"):
                 return response_error("405", "Method not allowed.")
             if not host_url.startswith(b"www."):
-                return response_error("400", "Bad request.")
+                return response_error()
             if not host.startswith(b"Host:"):
-                return response_error("400", "Bad request.")
+                return response_error()
             if protocol != (b"HTTP/1.1"):
                 return response_error("505", "HTTP version not supported.")
             else:
@@ -96,11 +99,11 @@ def parse_request(request):
                     cont, cont_type = resolve_uri(uri.decode('utf8'))
                     return response_ok(cont, cont_type)
                 except ValueError:
-                    response_error("400", "Bad request.")
+                    response_error()
         except TypeError:
-            return response_error("400", "Bad request.")
+            return response_error()
     else:
-        return response_error("400", "Bad request.")
+        return response_error()
 
 
 if __name__ == "__main__":  # pragma: no cover

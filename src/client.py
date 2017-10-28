@@ -7,7 +7,7 @@ import codecs
 
 def client(message):
     """Connect with server and send message."""
-    port = 5087
+    port = 5061
     message += '@#FULL_STOP#@'
     client = socket.socket(*socket.getaddrinfo('127.0.0.1', port)[1][:3])
     client.connect(('127.0.0.1', port))
