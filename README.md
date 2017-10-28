@@ -12,3 +12,5 @@ Added response ok and error functions with testing. Will return 200 or 500 HTTP 
 ### step2: 
 Added parse_request function to check for valid requests. Will send appropriate response with status code. Paramaterized response error function. Ford assisted by suggesting the codecs lib to help with encode/decode issues. 
  
+### step3:
+Added resolve uri and refactored response ok functions. URI will now be parsed and the response body will contain URI data, data type and character length.
