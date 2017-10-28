@@ -2,6 +2,7 @@
 # coding=utf-8
 
 # Tests for echo server, will break with newer versions.
+# Nick said it was okay to comment out.
 # def test_client():
 #     """Function tests that the server performs as planned."""
 #     from client import client
@@ -66,13 +67,6 @@ def test_client_message_response_ok_start():
     assert reply.startswith('HTTP/1.1 400')
 
 
-# def test_parse_request_response_ok():
-#     """Check if URI is returned from parse request function."""
-#     from server import parse_request
-#     req = b"GET /images HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
-#     assert parse_request(req).startswith(b'HTTP/1.1 200 OK')
-
-
 def test_parse_request_405_error():
     """Check if URI is returned from parse request function."""
     from server import parse_request
@@ -115,3 +109,22 @@ def test_parse_request_400_error_bad_parse_request():
     assert parse_request(req).startswith(b'HTTP/1.1 400')
 
 
+def test_resolve_uri_directory_content_type():
+    """Check uri content type."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri("/images")
+    assert cont_type == "directory"
+
+
+def test_resolve_uri_txt_plain_content_type():
+    """Check uri content type."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri("sample.txt")
+    assert cont_type == "text/plain"
+
+
+def test_parse_request_return():
+    """Test parse request for content and type."""
+    from server import parse_request
+    req = b"GET /images HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
+    assert parse_request(req).startswith(b"HTTP/1.1 200 OK")
