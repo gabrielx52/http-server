@@ -1,9 +1,11 @@
 """Async server using gevent."""
+
+
 import server
 import sys
 
 
-def async_server(socket, address):
+def async_server(socket, address):  # pragma: no cover
     """Async server function."""
     try:
         while True:
@@ -26,7 +28,7 @@ def async_server(socket, address):
         print("\nGoodbye")
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     from gevent.server import StreamServer
     from gevent.monkey import patch_all
     patch_all()
