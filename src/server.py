@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Server package for echo server."""
+from __future__ import unicode_literals
 import sys
 import socket
 import email.utils
@@ -10,7 +11,7 @@ import codecs
 
 def server():  # pragma: no cover
     """Start a server and echo all responses."""
-    port = 5061
+    port = 5081
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
@@ -28,7 +29,8 @@ def server():  # pragma: no cover
                 if b'@#FULL_STOP#@' in incoming_message:
                     message_complete = True
             clean_request = incoming_message.replace(b'@#FULL_STOP#@', b'')
-            parsed = parse_request(clean_request)
+            cleaner_request = codecs.escape_decode(clean_request)[0]
+            parsed = parse_request(cleaner_request)
             conn.sendall(parsed)
             conn.close()
     except KeyboardInterrupt:
@@ -44,7 +46,7 @@ def response_ok(content, cont_type):
     date_time = email.utils.formatdate(usegmt=True)
     return ("HTTP/1.1 200 OK\r\n" + "Date: " + date_time +
             "\r\nContent-Length: {}\r\nContent-Type: \
-{}\r\n\r\n{}@FULL_STOP@").format(str(len(content.encode('utf8'))),
+{}\r\n\r\n{}@FULL_STOP@").format(str(len(content)),
                                  cont_type, content).encode('utf8')
 
 
@@ -57,9 +59,10 @@ def response_error(code="400", phrase="Bad request."):
 
 
 def resolve_uri(uri):
-    """Respose body composer with URI details and type."""
-    cwd = os.path.abspath(__file__).rstrip('/server.py')
-    resource_path = cwd + '/webroot/' + uri
+    """Respose body composer with URI detail and type."""
+    cwd = os.path.abspath(__file__)
+    cwd = os.path.dirname(cwd)
+    resource_path = cwd + '/webroot' + uri
     if os.path.isdir(resource_path):
         li_temp = '\t<li>{}</li>'
         listing = []
@@ -70,9 +73,8 @@ def resolve_uri(uri):
         cont_type = "directory"
         return content, cont_type
     elif os.path.isfile(resource_path):
-        content = ''
-        with codecs.open(resource_path, encoding='utf8',
-                         errors='ignore') as file:
+        content = b''
+        with codecs.open(resource_path, 'rb', errors='ignore') as file:
             content = file.read()
         cont_type = mimetypes.guess_type(str(resource_path))[0]
         return content, cont_type

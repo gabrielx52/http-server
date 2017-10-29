@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Client package for echo server."""
+from __future__ import unicode_literals
 import socket
 import sys
 import codecs
@@ -7,7 +8,7 @@ import codecs
 
 def client(message):
     """Connect with server and send message."""
-    port = 5065
+    port = 5081
     message += '@#FULL_STOP#@'
     client = socket.socket(*socket.getaddrinfo('127.0.0.1', port)[1][:3])
     client.connect(('127.0.0.1', port))
