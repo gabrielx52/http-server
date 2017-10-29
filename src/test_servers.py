@@ -1,6 +1,6 @@
 """Test our Client-Server connection."""
 # coding=utf-8
-import os
+from __future__ import unicode_literals
 
 # Tests for echo server, will break with newer versions.
 # Nick said it was okay to comment out.
@@ -110,37 +110,36 @@ def test_parse_request_400_error_bad_parse_request():
     assert parse_request(req).startswith(b'HTTP/1.1 400')
 
 
-def test_resolve_uri_directory_content_type():
-    """Check uri content type."""
-    from server import resolve_uri
-    # print(os.getcwd())
-    content, cont_type = resolve_uri("/images")
-    assert cont_type == "directory"
-
-
-def test_resolve_uri_txt_plain_content_type():
-    """Check uri content type."""
-    from server import resolve_uri
-    content, cont_type = resolve_uri("sample.txt")
-    assert cont_type == "text/plain"
-
-
-def test_resolve_uri_png_content_type():
-    """Check uri content type of png."""
-    from server import resolve_uri
-    content, cont_type = resolve_uri("/images/sample_1.png")
-    assert cont_type == "image/png"
-
-
-def test_resolve_uri_jpg_content_type():
-    """Check uri content type of jpg."""
-    from server import resolve_uri
-    content, cont_type = resolve_uri("/images/JPEG_example.jpg")
-    assert cont_type == "image/jpeg"
-
-
 def test_parse_request_return():
     """Test parse request for content and type."""
     from server import parse_request
     req = b"GET /images HTTP/1.1\r\nHost: www.example.com\r\n\r\n"
     assert parse_request(req).startswith(b"HTTP/1.1 200 OK")
+
+
+def test_resolve_uri_directory_content_type():
+    """Check uri content type."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri(u"/images")
+    assert cont_type == u"directory"
+
+
+def test_resolve_uri_txt_plain_content_type():
+    """Check uri content type."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri(u"/sample.txt")
+    assert cont_type == u"text/plain"
+
+
+def test_resolve_uri_png_content_type():
+    """Check uri content type of png."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri(u"/images/sample_1.png")
+    assert cont_type == u"image/png"
+
+
+def test_resolve_uri_jpg_content_type():
+    """Check uri content type of jpg."""
+    from server import resolve_uri
+    content, cont_type = resolve_uri(u"/images/JPEG_example.jpg")
+    assert cont_type == u"image/jpeg"

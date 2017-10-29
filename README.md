@@ -14,3 +14,6 @@ Added parse_request function to check for valid requests. Will send appropriate 
  
 ### step3:
 Added resolve uri and refactored response ok functions. URI will now be parsed and the response body will contain URI data, data type and character length.
+
+### final step:
+We used gevent to make the server async and non-blocking.
