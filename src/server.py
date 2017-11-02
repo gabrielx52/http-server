@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Server package for echo server."""
-import sys
-import socket
 import email.utils
+import socket
+import sys
 
 
 def server():

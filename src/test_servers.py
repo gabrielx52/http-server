@@ -1,7 +1,7 @@
 """Test our Client-Server connection."""
 # coding=utf-8
 
-#Tests for echo server, will break with newer versions.
+# Tests for echo server, will break with newer versions.
 # def test_client():
 #     """Function tests that the server performs as planned."""
 #     from client import client
@@ -63,3 +63,10 @@ def test_client_message_response_ok_start():
     from client import client
     reply = client('test string')
     assert reply.startswith('HTTP/1.1 200 OK')
+
+
+def test_status_code_response_error():
+    """Testing response error returns 500 status code."""
+    from server import response_error
+    assert response_error().startswith('HTTP/1.1 500')
+
